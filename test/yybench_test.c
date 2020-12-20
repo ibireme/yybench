@@ -29,14 +29,19 @@ static void test_perf(void) {
     yy_perf_add_event(perf, YY_PERF_EVENT_INSTRUCTIONS);
     yy_perf_add_event(perf, YY_PERF_EVENT_BRANCHES);
     yy_perf_add_event(perf, YY_PERF_EVENT_BRANCH_MISSES);
-    yy_perf_open(perf);
+    if (!yy_perf_open(perf)) {
+        printf("perf open fail\n");
+        return;
+    }
     
     // profile
     yy_perf_start_counting(perf);
+    u64 t1 = yy_time_get_ticks();
     volatile int add = 0;
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 1000000; i++) {
         add++;
     }
+    u64 t2 = yy_time_get_ticks();
     yy_perf_stop_counting(perf);
     
     // get result
@@ -47,6 +52,12 @@ static void test_perf(void) {
     for (u32 i = 0; i < count; i++) {
         printf("%d. %.14s: %llu\n",i, names[i], counters[i]);
     }
+    
+    // tick
+    u64 tick = t2 - t1;
+    f64 time = (f64)tick / yy_cpu_get_tick_per_sec();
+    printf("time: %.3f ms\n", time * 1000.0);
+    printf("IPC: %.3f\n", (f64)counters[1] / (f64)counters[0]);
     
     // close perf and free resources
     yy_perf_close(perf);

@@ -553,7 +553,7 @@ static bool perf_event_to_name(yy_perf_event ev,
         case YY_PERF_EVENT_CYCLES:
             *name = "FIXED_CYCLES"; *alias = "cycles"; return true;
         case YY_PERF_EVENT_INSTRUCTIONS:
-            *name = "FIXED_INSTRUCTIONS"; *alias = "instructionss"; return true;
+            *name = "FIXED_INSTRUCTIONS"; *alias = "instructions"; return true;
         case YY_PERF_EVENT_BRANCHES:
             *name = "INST_BRANCH"; *alias = "branches"; return true;
         case YY_PERF_EVENT_BRANCH_MISSES:
@@ -570,7 +570,7 @@ static bool perf_event_to_name(yy_perf_event ev,
         case YY_PERF_EVENT_CYCLES:
             *name = "CPU_CLK_UNHALTED.THREAD"; *alias = "cycles"; return true;
         case YY_PERF_EVENT_INSTRUCTIONS:
-            *name = "INST_RETIRED.ANY"; *alias = "instructionss"; return true;
+            *name = "INST_RETIRED.ANY"; *alias = "instructions"; return true;
         case YY_PERF_EVENT_BRANCHES:
             *name = "BR_INST_RETIRED.ALL_BRANCHES"; *alias = "branches"; return true;
         case YY_PERF_EVENT_BRANCH_MISSES:
