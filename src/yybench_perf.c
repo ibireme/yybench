@@ -606,6 +606,15 @@ bool yy_perf_load(bool print_message_on_error) {
         }
         return false;
     }
+    
+    u32 ver = kpc_pmu_version();
+    if (ver == KPC_PMU_ERROR) {
+        if (print_message_on_error) {
+            fprintf(stderr, "Cannot load kperf, this requires root privileges (or blessed).\n");
+        }
+        return false;
+    }
+    
     return true;
 }
 

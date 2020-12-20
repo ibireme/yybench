@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.5)
 project (yybench VERSION 1.0.0)
 
+# Options
+option(YYBENCH_BUILD_TEST "Build test" OFF)
+
 
 # Build Type
 if (XCODE OR MSVC)
@@ -17,19 +20,20 @@ file(GLOB SOURCES "src/*.h" "src/*.c")
 add_library(yybench ${SOURCES})
 target_include_directories(yybench PUBLIC src)
 
-# Project Config
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(XcodeProperty)
+# Test
+if(YYBENCH_BUILD_TEST)
+    add_executable(yybench_test "test/yybench_test.c")
+    target_link_libraries(yybench_test yybench)
+endif()
 
+# Project Config
 if(XCODE)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+    include(XcodeProperty)
+
     set_default_xcode_property(yybench)
     set_xcode_deployment_version(yybench "10.11" "9.0" "9.0" "2.0")
-
-    set_xcode_property(yybench GCC_C_LANGUAGE_STANDARD "c99")
-    set_xcode_property(yybench CLANG_CXX_LANGUAGE_STANDARD "c++11")
-    
-    set_default_xcode_property(yybench_test)
-elseif(MSVC)
-    target_compile_options(yybench PRIVATE $<$<C_COMPILER_ID:MSVC>:/permissive- /utf-8>)
-    target_compile_options(yybench PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/permissive- /utf-8>)
+    if(YYBENCH_BUILD_TEST)
+        set_default_xcode_property(yybench_test)
+    endif()
 endif()

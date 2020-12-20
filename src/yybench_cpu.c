@@ -105,7 +105,7 @@ void yy_cpu_run_seq_b(void) {
      );
 }
 
-#elif (yy_has_attribute(naked)) && (YY_ARCH_X64 || YY_ARCH_X86) && 0
+#elif (yy_has_attribute(naked)) && (YY_ARCH_X64 || YY_ARCH_X86)
 #define YY_CPU_RUN_INST_COUNT_A (8192 * (128 + 256))
 #define YY_CPU_RUN_INST_COUNT_B (8192 * (512))
 

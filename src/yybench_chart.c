@@ -99,7 +99,7 @@ static bool yy_chart_axis_options_copy(yy_chart_axis_options *dst,
         int i, count;
         count = yy_chart_axis_category_count(src);
         if (count) {
-            dst->categories = calloc(count, sizeof(char *));
+            dst->categories = calloc(count + 1, sizeof(char *));
             if (!dst->categories) RETURN_FAIL();
             for (i = 0 ; i < count; i++) STR_COPY(categories[i]);
         }
