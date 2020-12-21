@@ -46,6 +46,16 @@ u64 yy_cpu_get_tick_per_sec(void);
     function. This function may used with yy_time_get_ticks() for benchmark. */
 f64 yy_cpu_get_cycle_per_tick(void);
 
+/** Convert tick to second.
+    You should call yy_cpu_measure_freq() at least once before calling this
+    function. This function may used with yy_time_get_ticks() for benchmark. */
+f64 yy_cpu_tick_to_sec(u64 tick);
+
+/** Convert tick to CPU cycle.
+    You should call yy_cpu_measure_freq() at least once before calling this
+    function. This function may used with yy_time_get_ticks() for benchmark. */
+u64 yy_cpu_tick_to_cycle(u64 tick);
+
 
 #ifdef __cplusplus
 }

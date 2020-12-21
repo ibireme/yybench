@@ -240,3 +240,11 @@ u64 yy_cpu_get_tick_per_sec(void) {
 f64 yy_cpu_get_cycle_per_tick(void) {
     return (f64)yy_cycle_per_sec / (f64)yy_tick_per_sec;
 }
+
+f64 yy_cpu_tick_to_sec(u64 tick) {
+    return tick / (f64)yy_tick_per_sec;;
+}
+
+u64 yy_cpu_tick_to_cycle(u64 tick) {
+    return (u64)(tick * ((f64)yy_cycle_per_sec / (f64)yy_tick_per_sec));
+}

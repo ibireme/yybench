@@ -55,11 +55,11 @@ static void test_perf(void) {
     
     // tick
     u64 tick = t2 - t1;
-    f64 time = (f64)tick / yy_cpu_get_tick_per_sec();
+    f64 time = yy_cpu_tick_to_sec(tick);
     printf("time: %.3f ms\n", time * 1000.0);
     printf("Cycles: %llu(PMU), %llu(Tick), accuracy:%.3f%%\n",
-           counters[0], (u64)(tick * yy_cpu_get_cycle_per_tick()),
-           tick * yy_cpu_get_cycle_per_tick() / counters[0] * 100);
+           counters[0], yy_cpu_tick_to_cycle(tick),
+           (f64)yy_cpu_tick_to_cycle(tick) / counters[0] * 100);
     printf("IPC: %.3f\n", (f64)counters[1] / (f64)counters[0]);
     
     // close perf and free resources
