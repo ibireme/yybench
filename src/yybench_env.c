@@ -5,6 +5,11 @@
 
 #include "yybench_env.h"
 
+#if defined(__ANDROID__)
+#include <sys/system_properties.h>
+#endif
+
+
 const char *yy_env_get_os_desc(void) {
 #if defined(__MINGW64__)
     return "Windows (MinGW-w64)";
@@ -20,32 +25,64 @@ const char *yy_env_get_os_desc(void) {
     return "Windows 32-bit";
     
 #elif defined(__APPLE__)
-#   if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    static bool finished = false;
+    static char os_desc[128] = {0};
+    static char os_ver[128] = {0};
+    size_t os_ver_size = sizeof(os_ver);
+    if (finished) return os_desc;
+    
+    sysctlbyname("kern.osproductversion", (void *)os_ver, &os_ver_size, NULL, 0);
+    if (strlen(os_ver) == 0) strcpy(os_ver, "unknown version");
+    
+#   if TARGET_OS_IPHONE || TARGET_OS_IOS
 #       if defined(YY_ARCH_64)
-    return "iOS 64-bit";
+            sprintf(os_desc, "iOS %s (64-bit)", os_ver);
 #       else
-    return "iOS 32-bit";
+            sprintf(os_desc, "iOS %s (32-bit)", os_ver);
 #       endif
-#   elif defined(TARGET_OS_OSX) && TARGET_OS_OSX
+#   elif TARGET_OS_OSX
 #       if defined(YY_ARCH_64)
-    return "macOS 64-bit";
+            sprintf(os_desc, "macOS %s (64-bit)", os_ver);
 #       else
-    return "macOS 32-bit";
+            sprintf(os_desc, "macOS %s (32-bit)", os_ver);
+#       endif
+#   elif TARGET_OS_WATCH
+#       if defined(YY_ARCH_64)
+            sprintf(os_desc, "watchOS %s (64-bit)", os_ver);
+#       else
+            sprintf(os_desc, "watchOS %s (32-bit)", os_ver);
+#       endif
+#   elif TARGET_OS_TV
+#       if defined(YY_ARCH_64)
+            sprintf(os_desc, "tvOS %s (64-bit)", os_ver);
+#       else
+            sprintf(os_desc, "tvOS %s (32-bit)", os_ver);
 #       endif
 #   else
 #       if defined(YY_ARCH_64)
-    return "Apple OS 64-bit";
+            sprintf(os_desc, "Unknown Apple OS %s (64-bit)", os_ver);
 #       else
-    return "Apple OS 32-bit";
+            sprintf(os_desc, "Unknown Apple OS %s (32-bit)", os_ver);
 #       endif
 #   endif
+    finished = true;
+    return os_desc;
     
 #elif defined(__ANDROID__)
+    static bool finished = false;
+    static char os_desc[128] = {0};
+    static char os_ver[128] = {0};
+    if (finished) return os_desc;
+    __system_property_get("ro.build.version.release", os_ver);
+    if (strlen(os_ver) == 0) strcpy(os_ver, "unknown version");
+    
 #   if defined(YY_ARCH_64)
-    return "Android 64-bit";
+    sprintf(os_desc, "Android %s (64-bit)", os_ver);
 #   else
-    return "Android 32-bit";
+    sprintf(os_desc, "Android %s (32-bit)", os_ver);
 #   endif
+    finished = true;
+    return os_desc;
     
 #elif defined(__linux__) || defined(__linux) || defined(__gnu_linux__)
 #   if defined(YY_ARCH_64)

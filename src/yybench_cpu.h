@@ -41,7 +41,7 @@ u64 yy_cpu_get_freq(void);
     function. This function may used with yy_time_get_ticks() for benchmark. */
 u64 yy_cpu_get_tick_per_sec(void);
 
-/** Returns cpu cycle tick.
+/** Returns cpu cycles per tick.
     You should call yy_cpu_measure_freq() at least once before calling this
     function. This function may used with yy_time_get_ticks() for benchmark. */
 f64 yy_cpu_get_cycle_per_tick(void);

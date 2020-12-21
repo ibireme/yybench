@@ -38,7 +38,7 @@ static void test_perf(void) {
     yy_perf_start_counting(perf);
     u64 t1 = yy_time_get_ticks();
     volatile int add = 0;
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000000; i++) {
         add++;
     }
     u64 t2 = yy_time_get_ticks();
@@ -57,6 +57,9 @@ static void test_perf(void) {
     u64 tick = t2 - t1;
     f64 time = (f64)tick / yy_cpu_get_tick_per_sec();
     printf("time: %.3f ms\n", time * 1000.0);
+    printf("Cycles: %llu(PMU), %llu(Tick), accuracy:%.3f%%\n",
+           counters[0], (u64)(tick * yy_cpu_get_cycle_per_tick()),
+           tick * yy_cpu_get_cycle_per_tick() / counters[0] * 100);
     printf("IPC: %.3f\n", (f64)counters[1] / (f64)counters[0]);
     
     // close perf and free resources

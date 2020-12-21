@@ -20,6 +20,11 @@ extern "C" {
  Do not use it with Intel VTunes, Linux perf, Xcode Instruments Counters,
  or it may produce wrong results.
  
+ Notice: A CPU has only a limited number configurable counters. Linux's perf
+ subsystem use multiplexing to allow us to monitor multiple events, but may
+ add more overhead. Apple XNU's KPC/kperf module doesn't use multiplexing,
+ so we can only monitor a limited number of event at the same time.
+ 
  Usage:
  
      // load perf module
