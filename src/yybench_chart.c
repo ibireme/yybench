@@ -427,9 +427,7 @@ bool yy_report_write_html_string(yy_report *report, char **html, usize *len) {
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/exporting.min.js'></script>");
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/export-data.min.js'></script>");
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/offline-exporting.min.js'></script>");
-    LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/sortable/0.8.0/js/sortable.min.js'></script>");
     LS("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css' />");
-    LS("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sortable/0.8.0/css/sortable-theme-minimal.min.css' />");
     LS("<style type='text/css'>");
     LS("hr {");
     LS("    height: 1px;");
@@ -459,6 +457,9 @@ bool yy_report_write_html_string(yy_report *report, char **html, usize *len) {
     LS("    vertical-align: initial;");
     LS("    text-align: initial;");
     LS("    background-color: initial;");
+    LS("}");
+    LS(".table.is-narrow td, .table.is-narrow th {");
+    LS("    padding: .1em .5em;");
     LS("}");
     LS("</style>");
     LS("</head>");
@@ -517,7 +518,7 @@ bool yy_report_write_html_string(yy_report *report, char **html, usize *len) {
             AF("width: %dpx; ", op->width > 0 ? op->width : 800);
             if (op->height > 0) AF("height: %dpx; ", op->height);
             LS("margin: 0 auto' class='table-container'>");
-            LS("    <table data-sortable class='table is-bordered is-narrow is-hoverable is-fullwidth'>");
+            LS("    <table class='table is-bordered is-narrow is-hoverable is-fullwidth'>");
             
             // header
             AS("        <caption>"); AE(STRDEF(op->title, "Unnamed Table")); LS("</caption>");

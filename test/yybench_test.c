@@ -152,7 +152,7 @@ static void test_chart(void) {
         op.title = "Sortable Table Demo";
         op.type = YY_CHART_TABLE;
         op.height = 0; // auto height
-        const char *categories[] = {"Q1", "Q2", "Q3", "Q4", NULL};;
+        static const char *categories[] = {"Q1", "Q2", "Q3", "Q4", NULL};;
         op.h_axis.categories = categories;
         
         // Create a chart and set options.

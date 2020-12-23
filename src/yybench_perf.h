@@ -78,10 +78,10 @@ typedef enum yy_perf_event {
     /* All retired instruction count */
     YY_PERF_EVENT_INSTRUCTIONS,
     
-    /* Branch instruction count */
+    /* Condition branch instruction count */
     YY_PERF_EVENT_BRANCHES,
     
-    /* Branch instruction mispredict count */
+    /* Condition branch instruction mispredict count */
     YY_PERF_EVENT_BRANCH_MISSES,
     
     /* Level 1 instruction cache load count */
