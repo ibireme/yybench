@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.5)
 project (yybench VERSION 1.0.0)
 
 # Options
-option(YYBENCH_BUILD_TEST "Build test" OFF)
+option(YYBENCH_BUILD_TESTS "Build tests" OFF)
 
 
 # Build Type
@@ -20,8 +20,8 @@ file(GLOB SOURCES "src/*.h" "src/*.c")
 add_library(yybench ${SOURCES})
 target_include_directories(yybench PUBLIC src)
 
-# Test
-if(YYBENCH_BUILD_TEST)
+# Tests
+if(YYBENCH_BUILD_TESTS)
     add_executable(yybench_test "test/yybench_test.c")
     target_link_libraries(yybench_test yybench)
 endif()
@@ -33,7 +33,7 @@ if(XCODE)
 
     set_default_xcode_property(yybench)
     set_xcode_deployment_version(yybench "10.11" "9.0" "9.0" "2.0")
-    if(YYBENCH_BUILD_TEST)
+    if(YYBENCH_BUILD_TESTS)
         set_default_xcode_property(yybench_test)
     endif()
 endif()

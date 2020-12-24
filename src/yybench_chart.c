@@ -427,7 +427,10 @@ bool yy_report_write_html_string(yy_report *report, char **html, usize *len) {
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/exporting.min.js'></script>");
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/export-data.min.js'></script>");
     LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.2.0/modules/offline-exporting.min.js'></script>");
+    LS("<script src='https://cdnjs.cloudflare.com/ajax/libs/sortable/0.8.0/js/sortable.min.js'></script>");
     LS("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css' />");
+    LS("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sortable/0.8.0/css/sortable-theme-bootstrap.min.css' />");
+    LS("<script>window.onload=Sortable.init</script>");
     LS("<style type='text/css'>");
     LS("hr {");
     LS("    height: 1px;");
@@ -516,9 +519,8 @@ bool yy_report_write_html_string(yy_report *report, char **html, usize *len) {
             LS("<div style='width: 60px; height: 60px; margin: 0 auto'></div>");
             AF("<div id='chart_id_%d' style='", c);
             AF("width: %dpx; ", op->width > 0 ? op->width : 800);
-            if (op->height > 0) AF("height: %dpx; ", op->height);
             LS("margin: 0 auto' class='table-container'>");
-            LS("    <table class='table is-bordered is-narrow is-hoverable is-fullwidth'>");
+            LS("    <table data-sortable class='table is-bordered is-narrow is-hoverable is-fullwidth sortable-theme-bootstrap'>");
             
             // header
             AS("        <caption>"); AE(STRDEF(op->title, "Unnamed Table")); LS("</caption>");

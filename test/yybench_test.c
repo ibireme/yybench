@@ -75,6 +75,7 @@ static void test_chart(void) {
     yy_report *report = yy_report_new();
     yy_report_add_info(report, "This is a report demo");
     yy_report_add_info(report, "The chart is rendered with highcharts");
+    yy_report_add_env_info(report);
     
     {
         // Config line chart options.
@@ -151,7 +152,6 @@ static void test_chart(void) {
         yy_chart_options_init(&op);
         op.title = "Sortable Table Demo";
         op.type = YY_CHART_TABLE;
-        op.height = 0; // auto height
         static const char *categories[] = {"Q1", "Q2", "Q3", "Q4", NULL};;
         op.h_axis.categories = categories;
         
@@ -187,6 +187,101 @@ static void test_chart(void) {
         yy_report_add_chart(report, chart);
         yy_chart_free(chart);
     }
+    
+    
+    if (yy_perf_load(false)) {
+        // branch misprediction penalty
+        printf("test branch misprediction penalty...\n");
+        
+#define ITERAT_NUM 128
+#define SAMPLE_NUM 200
+#define BRANCH_NUM 4096
+        float cycles[SAMPLE_NUM + 1] = {0};
+        float misses[SAMPLE_NUM + 1] = {0};
+        
+        yy_perf *perf = yy_perf_new();
+        yy_perf_add_event(perf, YY_PERF_EVENT_CYCLES);
+        yy_perf_add_event(perf, YY_PERF_EVENT_BRANCH_MISSES);
+        yy_perf_open(perf);
+        for (int iter = 0; iter < ITERAT_NUM; iter++) {
+            for (int s = 0; s <= SAMPLE_NUM; s++) {
+                yy_perf_start_counting(perf);
+                for (int i = 0; i < BRANCH_NUM; i++) {
+                    if ((int)(yy_random32() % SAMPLE_NUM) < s) {
+                        yy_random32();
+                        yy_random32();
+                        yy_random32();
+                        yy_random32();
+                    } else {
+                        yy_random64();
+                        yy_random64();
+                    }
+                }
+                yy_perf_stop_counting(perf);
+                
+                u64 *vals = yy_perf_get_counters(perf);
+                u64 cycle = vals[0];
+                u64 miss = vals[1];
+                cycles[s] += cycle;
+                misses[s] += miss;
+            }
+        }
+        float cycle_min = cycles[0];
+        float cycle_max = cycles[SAMPLE_NUM];
+        for (int s = 0; s <= SAMPLE_NUM; s++) {
+            cycles[s] -= cycle_min + (cycle_max - cycle_min) * s / SAMPLE_NUM;
+            cycles[s] /= BRANCH_NUM * ITERAT_NUM;
+            misses[s] /= BRANCH_NUM * ITERAT_NUM;
+        }
+        yy_perf_free(perf);
+        
+        
+        // Config line chart options.
+        yy_chart_options op;
+        yy_chart_options_init(&op);
+        op.width = 600;
+        op.height = 400;
+        op.title = "CPU Branch Misprediction Penalty";
+        op.type = YY_CHART_LINE;
+        op.h_axis.title = "random";
+        op.tooltip.value_decimals = 3;
+        
+        // Create a chart and set options.
+        yy_chart *chart = yy_chart_new();
+        yy_chart_set_options(chart, &op);
+        
+        yy_chart_item_begin(chart, "cycles");
+        for (int i = 0; i <= SAMPLE_NUM; i ++) {
+            yy_chart_item_add_float(chart, cycles[i]);
+        }
+        yy_chart_item_end(chart);
+        
+        yy_chart_item_begin(chart, "miss rate");
+        for (int i = 0; i <= SAMPLE_NUM; i ++) {
+            yy_chart_item_add_float(chart, misses[i]);
+        }
+        yy_chart_item_end(chart);
+        
+        yy_chart_item_begin(chart, "penalty");
+        for (int i = 0; i <= SAMPLE_NUM; i ++) {
+            float cycle = cycles[i];
+            float miss = misses[i];
+            float penalty = cycle / miss;
+            if (!isfinite(penalty)) penalty = 0;
+            penalty = penalty < 0 ? 0 : penalty > 50 ? 50 : penalty;
+            yy_chart_item_add_float(chart, penalty);
+        }
+        yy_chart_item_end(chart);
+        
+        
+        // Add chart to report, and free the chart.
+        yy_report_add_chart(report, chart);
+        yy_chart_free(chart);
+        
+        
+        
+    }
+    
     
     // Write and free the report
     const char *path = "report.html";
