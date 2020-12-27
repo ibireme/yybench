@@ -16,7 +16,7 @@ extern "C" {
 /*==============================================================================
  Performance Monitor Counter
  
- Currently only support Linux, macOS and iOS with root privileges.
+ Currently only support Linux/Android, macOS/iOS with root privileges.
  Do not use it with Intel VTunes, Linux perf, Xcode Instruments Counters,
  or it may produce wrong results.
  
