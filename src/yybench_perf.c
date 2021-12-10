@@ -721,7 +721,7 @@ bool yy_perf_open(yy_perf *perf) {
     ret = kpc_set_thread_counting(classes);
     if (ret != 0) return false;
     
-    memset(perf->counters_begin, 0, sizeof(perf->counters));
+    memset(perf->counters_begin, 0, sizeof(perf->counters_begin));
     memset(perf->counters_end, 0, sizeof(perf->counters_end));
     memset(perf->counters_overhead, 0, sizeof(perf->counters_overhead));
     memset(perf->counters, 0, sizeof(perf->counters));
@@ -759,7 +759,7 @@ bool yy_perf_start_counting(yy_perf *perf) {
     if (!perf || !perf->is_opened) return false;
     if (perf->is_counting) return true;
     
-    memset(perf->counters_begin, 0, sizeof(perf->counters));
+    memset(perf->counters_begin, 0, sizeof(perf->counters_begin));
     memset(perf->counters_end, 0, sizeof(perf->counters_end));
     memset(perf->counters, 0, sizeof(perf->counters));
     
